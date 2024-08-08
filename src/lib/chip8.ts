@@ -131,6 +131,37 @@ export class Chip8 {
         break;
       }
       case 0x8000: {
+        switch (this.opcode & 0x000F) {
+          case 0x0000: {
+            break;
+          }
+          case 0x0001: {
+            break;
+          }
+          case 0x0002: {
+            break;
+          }
+          case 0x0003: {
+            break;
+          }
+          case 0x0004: {
+            break;
+          }
+          case 0x0005: {
+            break;
+          }
+          case 0x0006: {
+            break;
+          }
+          case 0x0007: {
+            break;
+          }
+          case 0x000E: {
+            break;
+          }
+          default:
+            console.error('Unrecognized opcode');
+        }
         break;
       }
       case 0x9000: {
@@ -160,9 +191,52 @@ export class Chip8 {
         break;
       }
       case 0xE000: {
+        switch (this.opcode & 0x00FF)
+        {
+          case 0x009E: {
+            break;
+          }
+          case 0x00A1: {
+            break;
+          }
+          default:
+            console.error('Unrecognized opcode');
+        }
         break;
       }
       case 0xF000: {
+        switch (this.opcode & 0x00FF)
+        {
+          case 0x0007: {
+            break;
+          }
+          case 0x000A: {
+            break;
+          }
+          case 0x0015: {
+            break;
+          }
+          case 0x0018: {
+            break;
+          }
+          case 0x001E: {
+            break;
+          }
+          case 0x0029: {
+            break;
+          }
+          case 0x0033: {
+            break;
+          }
+          case 0x0055: {
+            break;
+          }
+          case 0x0065: {
+            break;
+          }
+          default:
+            console.error('Unrecognized opcode');
+        }
         break;
       }
       default:
