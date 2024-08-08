@@ -77,6 +77,7 @@ export class Chip8 {
           case 0x00E0:
             console.log('Clear display');
             this.drawFlag = true;
+            this.pc += 2;
             break;
           case 0x00EE:
             this.sp--;
@@ -155,6 +156,7 @@ export class Chip8 {
       }
       case 0xD000: {
         this.drawFlag = true;
+        this.pc += 2;
         break;
       }
       case 0xE000: {
