@@ -2,8 +2,9 @@ export class Chip8 {
   public graphics: boolean[][];
   public keys: boolean[];
 
+  private pc: number;
   private opcode: number;
-  private memory: string[];
+  private memory: number[];
   private V: string[];
   private I: number;
   private stack: string[];
@@ -14,7 +15,8 @@ export class Chip8 {
     this.graphics = [];
     this.keys = [];
     
-    this.opcode = 0x200;
+    this.pc = 0x200;
+    this.opcode = 0;
     this.memory = [];
     this.V = [];
     this.I = 0;
@@ -35,8 +37,22 @@ export class Chip8 {
     }
 
     for (let i = 0; i < 4096; i++) {
-      this.memory[i] = '0';
+      this.memory[i] = 0;
     }
+  }
+
+  /**
+   * loadGameIntoMemory
+   */
+  public async loadGameIntoMemory(buffer: Uint8Array): Promise<boolean> {
+    const promise = new Promise<boolean>((resolve) => {
+      for (let i = 0; i < buffer.length; i++) {
+        this.memory[i + 0x200] = buffer[i];
+      }
+      resolve(true);
+    });
+
+    return promise;
   }
 
   private generateRandomNumber(): number {
@@ -49,27 +65,6 @@ export class Chip8 {
    * emulateCycle
    */
   public emulateCycle(): void {
-    console.log('Emulate cycle');
-  }
-
-  /**
-   * loadGame
-   */
-  public loadGame(gameFile: File): void {
-    const fileReader = new FileReader();
-
-    fileReader.onload = () => {
-      const result = new Uint8Array(fileReader.result as ArrayBuffer);
-
-      for (let i = 0; i < result.length; i++) {
-        this.memory[i + 0x200] = result[i].toString(16).padStart(2, '0');
-      }
-    };
-
-    fileReader.onerror = () => {
-      console.error('Error: Unable to read file');
-    };
-
-    fileReader.readAsArrayBuffer(gameFile);
+    this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
   }
 }

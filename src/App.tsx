@@ -1,14 +1,18 @@
-import { Chip8 } from '@/lib/chip8';
 import React from 'react';
-
-const chip8 = new Chip8();
+import { Emulator } from '@/lib/emulator';
 
 const App = () => {
+  const emulator = new Emulator();
+
   const handleUpload = (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.currentTarget.files) {
       const gameFile = e.currentTarget.files[0];
-      chip8.loadGame(gameFile);
+      emulator.readGame(gameFile);
     }
+  };
+
+  const handlePlay = () => {
+    emulator.play();
   };
   
   return (
@@ -21,6 +25,7 @@ const App = () => {
         accept='.rom'
         onChange={handleUpload}
       />
+      <button onClick={handlePlay}>Play</button>
     </>
   );
 };
