@@ -1,5 +1,5 @@
 export class Chip8 {
-  private graphics: boolean[][];
+  private graphics: number[][];
   private key: number | undefined;
   private pc: number;
   private opcode: number;
@@ -28,7 +28,7 @@ export class Chip8 {
     for (let i = 0; i < 64; i++) {
       this.graphics[i] = [];
       for (let j = 0; j < 32; j++) {
-        this.graphics[i][j] = false;
+        this.graphics[i][j] = 0;
       }
     }
 
@@ -42,7 +42,7 @@ export class Chip8 {
     }
   }
 
-  public getGraphics(): boolean[][] {
+  public getGraphics(): number[][] {
     return this.graphics;
   }
 
@@ -93,7 +93,7 @@ export class Chip8 {
       case 0x0000: {
         switch (this.opcode & 0x00FF) {
           case 0x00E0:
-            console.log('Clear display');
+            this.graphics = Array.from(Array(64), () => Array(32).fill(0) as number[]);
             this.drawFlag = true;
             this.pc += 2;
             break;
@@ -238,6 +238,23 @@ export class Chip8 {
         break;
       }
       case 0xD000: {
+        const x = this.V[(this.opcode & 0x0F00) >> 8];
+        const y = this.V[(this.opcode & 0x00F0) >> 4];
+        const height = this.opcode & 0x000F;
+        let pixel: number;
+
+        for (let yLine = 0; yLine < height; yLine++) {
+          pixel = this.memory[this.I + yLine];
+          for (let xLine = 0; xLine < 8; xLine++) {
+            if ((pixel & (0x80 >> xLine)) !== 0) {
+              if (this.graphics[xLine + x][yLine + y]) {
+                this.V[0xF] = 1;
+              }
+              this.graphics[xLine + x][yLine + y] ^= 1;
+            }
+          }
+        }
+
         this.drawFlag = true;
         this.pc += 2;
         break;
