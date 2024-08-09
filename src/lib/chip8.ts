@@ -140,30 +140,64 @@ export class Chip8 {
       case 0x8000: {
         switch (this.opcode & 0x000F) {
           case 0x0000: {
+            this.V[(this.opcode & 0x0F00) >> 8] = this.V[(this.opcode & 0x00F0) >> 4];
+            this.pc += 2;
             break;
           }
           case 0x0001: {
+            this.V[(this.opcode & 0x0F00) >> 8] |= this.V[(this.opcode & 0x00F0) >> 4];
+            this.pc += 2;
             break;
           }
           case 0x0002: {
+            this.V[(this.opcode & 0x0F00) >> 8] &= this.V[(this.opcode & 0x00F0) >> 4];
+            this.pc += 2;
             break;
           }
           case 0x0003: {
+            this.V[(this.opcode & 0x0F00) >> 8] ^= this.V[(this.opcode & 0x00F0) >> 4];
+            this.pc += 2;
             break;
           }
           case 0x0004: {
+            if ((this.V[(this.opcode & 0x00F0)] >> 4 ) > (0xFF - this.V[(this.opcode & 0x0F00) >> 8]))
+              this.V[0xF] = 1;
+            else
+              this.V[0xF] = 0;
+            this.V[(this.opcode & 0x0F00) >> 8] += this.V[(this.opcode & 0x00F0) >> 4]; 
+            this.pc += 2;
             break;
           }
           case 0x0005: {
+            if (this.V[(this.opcode & 0x00F0) >> 4] > this.V[(this.opcode & 0x0F00) >> 8])
+              this.V[0xF] = 1;
+            else
+              this.V[0xF] = 0;
+            this.V[(this.opcode & 0x0F00) >> 8] -= this.V[(this.opcode & 0x00F0) >> 4];
+            this.pc += 2;
             break;
           }
           case 0x0006: {
+            const leastSigBit = this.V[(this.opcode & 0x0F00) >> 8] & 0b00000001;
+            this.V[0xF] = leastSigBit;
+            this.V[(this.opcode & 0x0F00) >> 8] >>= 1;
+            this.pc += 2;
             break;
           }
           case 0x0007: {
+            if (this.V[(this.opcode & 0x0F00) >> 8] > this.V[(this.opcode & 0x00F0) >> 4])
+              this.V[0xF] = 1;
+            else
+              this.V[0xF] = 0;
+            this.V[(this.opcode & 0x00F0) >> 4] -= this.V[(this.opcode & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           }
           case 0x000E: {
+            const mostSigBit = this.V[(this.opcode & 0x0F00) >> 8] & 0b10000000;
+            this.V[0xF] = mostSigBit;
+            this.V[(this.opcode & 0x0F00) >> 8] <<= 1;
+            this.pc += 2;
             break;
           }
           default:
