@@ -244,9 +244,17 @@ export class Chip8 {
         switch (this.opcode & 0x00FF)
         {
           case 0x009E: {
+            if (this.key === this.V[(this.opcode & 0x0F00) >> 8])
+              this.pc += 4;
+            else
+              this.pc += 2;
             break;
           }
           case 0x00A1: {
+            if (this.key !== this.V[(this.opcode & 0x0F00) >> 8])
+              this.pc += 4;
+            else
+              this.pc += 2;
             break;
           }
           default:
