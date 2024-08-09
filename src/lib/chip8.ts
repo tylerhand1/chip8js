@@ -9,6 +9,8 @@ export class Chip8 {
   private stack: number[];
   private sp: number;
   private drawFlag: boolean;
+  private delayTimer: number | undefined;
+  private soundTimer: number | undefined;
   private lastExecTime: Date | undefined;
 
   constructor() {
@@ -266,30 +268,55 @@ export class Chip8 {
         switch (this.opcode & 0x00FF)
         {
           case 0x0007: {
+            if (this.delayTimer)
+              this.V[(this.opcode & 0x0F00) >> 8] = this.delayTimer;
+            this.pc += 2;
             break;
           }
           case 0x000A: {
+            if (this.key === this.V[(this.opcode & 0x0F00) >> 8])
+              this.pc += 2;
             break;
           }
           case 0x0015: {
+            this.delayTimer = this.V[(this.opcode & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           }
           case 0x0018: {
+            this.soundTimer = this.V[(this.opcode & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           }
           case 0x001E: {
+            this.I += this.V[(this.opcode & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           }
           case 0x0029: {
+            this.I = this.V[(this.opcode & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           }
           case 0x0033: {
+            this.memory[this.I] = this.V[(this.opcode & 0x0F00) >> 8] / 100;
+            this.memory[this.I + 1] = (this.V[(this.opcode & 0x0F00) >> 8] / 10) % 10;
+            this.memory[this.I + 2] = (this.V[(this.opcode & 0x0F00) >> 8] % 100) % 10;
+            this.pc += 2;
             break;
           }
           case 0x0055: {
+            for (let i = 0; i < (this.opcode & 0x0F00) >> 8; i++) {
+              this.memory[i + this.I] = this.V[i];
+            }
+            this.pc += 2;
             break;
           }
           case 0x0065: {
+            for (let i = 0; i < (this.opcode & 0x0F00) >> 8; i++) {
+              this.V[i] = this.memory[i + this.I];
+            }
+            this.pc += 2;
             break;
           }
           default:
