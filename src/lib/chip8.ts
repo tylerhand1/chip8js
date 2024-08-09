@@ -44,6 +44,13 @@ export class Chip8 {
   }
 
   /**
+   * getDrawFlag
+   */
+  public getDrawFlag(): boolean {
+    return this.drawFlag;
+  }
+
+  /**
    * loadGameIntoMemory
    */
   public async loadGameIntoMemory(buffer: Uint8Array): Promise<boolean> {
