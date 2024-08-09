@@ -11,7 +11,8 @@ export class Chip8 {
   private drawFlag: boolean;
   private delayTimer: number | undefined;
   private soundTimer: number | undefined;
-  private lastExecTime: Date | undefined;
+  private lastExecTime: number | undefined;
+  private error: boolean;
 
   constructor() {
     this.graphics = [];
@@ -24,6 +25,70 @@ export class Chip8 {
     this.stack = [];
     this.sp = 0;
     this.drawFlag = false;
+
+    this.error = false;
+
+    this.initialize();
+  }
+
+  /**
+   * getGraphics
+   */
+  public getGraphics(): number[][] {
+    return this.graphics;
+  }
+
+  /**
+   * setKey
+   */
+  public setKey(key: number): void {
+    this.key = key;
+  }
+
+  /**
+   * getKey
+   */
+  public getKey(): number | undefined {
+    return this.key;
+  }
+
+  /**
+   * getDrawFlag
+   */
+  public getDrawFlag(): boolean {
+    return this.drawFlag;
+  }
+
+  /**
+   * getLastExecTime
+   */
+  public getLastExecTime(): number | undefined {
+    return this.lastExecTime;
+  }
+
+  /**
+   * getError
+   */
+  public getError(): boolean {
+    return this.error;
+  }
+
+  /**
+   * initialize
+   */
+  public initialize(): void {
+    this.graphics = [];
+    
+    this.pc = 0x200;
+    this.opcode = 0;
+    this.memory = [];
+    this.V = [];
+    this.I = 0;
+    this.stack = [];
+    this.sp = 0;
+    this.drawFlag = false;
+    this.lastExecTime = undefined;
+    this.error = false;
 
     for (let i = 0; i < 64; i++) {
       this.graphics[i] = [];
@@ -42,30 +107,12 @@ export class Chip8 {
     }
   }
 
-  public getGraphics(): number[][] {
-    return this.graphics;
-  }
-
-  public setKey(key: number): void {
-    this.key = key;
-  }
-
-  public getKey(): number | undefined {
-    return this.key;
-  }
-
-  /**
-   * getDrawFlag
-   */
-  public getDrawFlag(): boolean {
-    return this.drawFlag;
-  }
-
   /**
    * loadGameIntoMemory
    */
   public async loadGameIntoMemory(buffer: Uint8Array): Promise<boolean> {
     const promise = new Promise<boolean>((resolve) => {
+      this.initialize();
       for (let i = 0; i < buffer.length; i++) {
         this.memory[i + 0x200] = buffer[i];
       }
@@ -81,14 +128,7 @@ export class Chip8 {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  /**
-   * emulateCycle
-   */
-  public emulateCycle(): void {
-    this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
-
-    console.log(this.opcode.toString(16));
-
+  private handleOpcode(): void {
     switch (this.opcode & 0xF000) {
       case 0x0000: {
         switch (this.opcode & 0x00FF) {
@@ -99,11 +139,12 @@ export class Chip8 {
             break;
           case 0x00EE:
             this.sp--;
-            this.pc = this.sp;
+            this.pc = this.stack[this.sp];
             this.pc += 2;
             break;
           default:
             console.error('Unrecognized opcode');
+            this.error = true;
         }
         break;
       }
@@ -213,6 +254,7 @@ export class Chip8 {
           }
           default:
             console.error('Unrecognized opcode');
+            this.error = true;
         }
         break;
       }
@@ -238,8 +280,8 @@ export class Chip8 {
         break;
       }
       case 0xD000: {
-        const x = this.V[(this.opcode & 0x0F00) >> 8];
-        const y = this.V[(this.opcode & 0x00F0) >> 4];
+        const x: number = this.V[(this.opcode & 0x0F00) >> 8] >> 8;
+        const y: number = this.V[(this.opcode & 0x00F0) >> 4] >> 8;
         const height = this.opcode & 0x000F;
         let pixel: number;
 
@@ -278,6 +320,7 @@ export class Chip8 {
           }
           default:
             console.error('Unrecognized opcode');
+            this.error = true;
         }
         break;
       }
@@ -338,11 +381,38 @@ export class Chip8 {
           }
           default:
             console.error('Unrecognized opcode');
+            this.error = true;
         }
         break;
       }
       default:
         console.error('Unrecognized opcode');
+        this.error = true;
     }
+  }
+
+  private handleTimers(): void {
+    if (this.delayTimer && this.delayTimer > 0)
+      this.delayTimer--;
+
+    if (this.soundTimer && this.soundTimer > 0) {
+      if (this.soundTimer === 1)
+        console.log('Play sound');
+      this.soundTimer--;
+    }
+  }
+
+  /**
+   * emulateCycle
+   */
+  public emulateCycle(): void {
+    if (!this.lastExecTime)
+      this.lastExecTime = new Date().getTime();
+
+    this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
+
+    this.handleOpcode();
+
+    this.handleTimers();
   }
 }

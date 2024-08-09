@@ -14,6 +14,7 @@ export class Emulator {
    * readGame
    */
   public readGame(gameFile: File): void {
+    this.chip8.initialize();
     const fileReader = new FileReader();
 
     fileReader.onload = async () => {
@@ -30,8 +31,22 @@ export class Emulator {
   }
 
   public play(): void {
-    if (this.isLoaded)
-      this.chip8.emulateCycle();
+    if (this.isLoaded) {
+      for(;;) {
+        const currTime = new Date().getTime();
+        if (this.chip8.getLastExecTime()) {
+          const lastExecTime = this.chip8.getLastExecTime();
+          if (lastExecTime && currTime < (lastExecTime + ((1 / 60.0) * 1000))) {
+            continue;
+          }
+        }
+        this.chip8.emulateCycle();
+
+        if (this.chip8.getError())
+          break;
+      }
+    }
+      
     else
       console.log('Memory not loaded yet');
   }
