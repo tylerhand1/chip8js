@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.screen-container {
+  outline: 1px solid black;
+}
+
+.pixel-row {
+  display: flex;
+}
+
+.pixel {
+  width: 13px;
+  height: 13px;
+}
+
+.filled {
+  background-color: black;
+}
