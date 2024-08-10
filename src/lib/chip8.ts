@@ -205,7 +205,7 @@ export class Chip8 {
             break;
           }
           case 0x0005: {
-            if (this.V[(this.opcode & 0x00F0) >> 4] > this.V[(this.opcode & 0x0F00) >> 8])
+            if (this.V[(this.opcode & 0x00F0) >> 4] >= this.V[(this.opcode & 0x0F00) >> 8])
               this.V[0xF] = 1;
             else
               this.V[0xF] = 0;
@@ -221,7 +221,7 @@ export class Chip8 {
             break;
           }
           case 0x0007: {
-            if (this.V[(this.opcode & 0x0F00) >> 8] > this.V[(this.opcode & 0x00F0) >> 4])
+            if (this.V[(this.opcode & 0x00F0) >> 4] > this.V[(this.opcode & 0x0F00) >> 8])
               this.V[0xF] = 1;
             else
               this.V[0xF] = 0;
