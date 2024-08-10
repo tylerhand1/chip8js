@@ -159,21 +159,21 @@ export class Chip8 {
         break;
       }
       case 0x3000: {
-        if (this.V[(this.opcode & 0x0F00) >> 8] == (this.opcode & 0x00FF))
+        if (this.V[(this.opcode & 0x0F00) >> 8] === (this.opcode & 0x00FF))
           this.pc += 4;
         else
           this.pc += 2;
         break;
       }
       case 0x4000: {
-        if (this.V[(this.opcode & 0x0F00) >> 8] != (this.opcode & 0x00FF))
+        if (this.V[(this.opcode & 0x0F00) >> 8] !== (this.opcode & 0x00FF))
           this.pc += 4;
         else
           this.pc += 2;
         break;
       }
       case 0x5000: {
-        if (this.V[(this.opcode & 0x0F00) >> 8] == this.V[(this.opcode & 0x00F0) >> 4])
+        if (this.V[(this.opcode & 0x0F00) >> 8] === this.V[(this.opcode & 0x00F0) >> 4])
           this.pc += 4;
         else
           this.pc += 2;
@@ -259,7 +259,7 @@ export class Chip8 {
         break;
       }
       case 0x9000: {
-        if (this.V[(this.opcode & 0x0F00) >> 8] != this.V[(this.opcode & 0x00F0) >> 4])
+        if (this.V[(this.opcode & 0x0F00) >> 8] !== this.V[(this.opcode & 0x00F0) >> 4])
           this.pc += 4;
         else
           this.pc += 2;
