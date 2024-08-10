@@ -77,7 +77,7 @@ export class Chip8 {
    * initialize
    */
   public initialize(): void {
-    this.graphics = [];
+    this.graphics = Array.from(Array(64), () => Array(32).fill(0) as number[]);
     
     this.pc = 0x200;
     this.opcode = 0;
@@ -89,13 +89,6 @@ export class Chip8 {
     this.drawFlag = false;
     this.lastExecTime = undefined;
     this.error = false;
-
-    for (let i = 0; i < 64; i++) {
-      this.graphics[i] = [];
-      for (let j = 0; j < 32; j++) {
-        this.graphics[i][j] = 0;
-      }
-    }
 
     for (let i = 0; i < 16; i++) {
       this.V[i] = 0;
@@ -246,7 +239,7 @@ export class Chip8 {
             break;
           }
           case 0x000E: {
-            const mostSigBit = this.V[(this.opcode & 0x0F00) >> 8] & 0b10000000;
+            const mostSigBit = (this.V[(this.opcode & 0x0F00) >> 8] & 0b10000000) >> 7;
             this.V[0xF] = mostSigBit;
             this.V[(this.opcode & 0x0F00) >> 8] <<= 1;
             this.pc += 2;
