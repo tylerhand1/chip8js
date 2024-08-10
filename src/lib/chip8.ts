@@ -11,7 +11,6 @@ export class Chip8 {
   private drawFlag: boolean;
   private delayTimer: number | undefined;
   private soundTimer: number | undefined;
-  private lastExecTime: number | undefined;
   private error: boolean;
 
   constructor() {
@@ -60,13 +59,6 @@ export class Chip8 {
   }
 
   /**
-   * getLastExecTime
-   */
-  public getLastExecTime(): number | undefined {
-    return this.lastExecTime;
-  }
-
-  /**
    * getError
    */
   public getError(): boolean {
@@ -87,7 +79,6 @@ export class Chip8 {
     this.stack = [];
     this.sp = 0;
     this.drawFlag = false;
-    this.lastExecTime = undefined;
     this.error = false;
 
     for (let i = 0; i < 16; i++) {
@@ -399,9 +390,6 @@ export class Chip8 {
    * emulateCycle
    */
   public emulateCycle(): void {
-    if (!this.lastExecTime)
-      this.lastExecTime = new Date().getTime();
-
     this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
 
     this.handleOpcode();
