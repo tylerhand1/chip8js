@@ -2,11 +2,16 @@ import { Chip8 } from '@/lib/chip8';
 
 export class Emulator {
   private chip8;
+  private stop;
 
   public isLoaded: boolean;
 
+  private intervalID: ReturnType<typeof setTimeout> | undefined;
+
   constructor() {
     this.chip8 = new Chip8();
+    this.stop = true;
+
     this.isLoaded = false;
   }
 
@@ -30,24 +35,56 @@ export class Emulator {
     fileReader.readAsArrayBuffer(gameFile);
   }
 
+  /**
+   * setStop
+   */
+  public setStop(stop: boolean): void {
+    this.stop = stop;
+  }
+
+  /**
+   * reset
+   */
+  public reset(): void {
+    this.chip8.initialize();
+  }
+
+  /**
+   * play
+   */
   public play(): void {
-    if (this.isLoaded) {
-      for(;;) {
-        const currTime = new Date().getTime();
-        if (this.chip8.getLastExecTime()) {
-          const lastExecTime = this.chip8.getLastExecTime();
-          if (lastExecTime && currTime < (lastExecTime + ((1 / 60.0) * 1000))) {
-            continue;
+    if (!this.isLoaded) {
+      console.log('Memory not loaded yet');
+      return;
+    }
+
+    window.requestAnimationFrame(() => { this.gameLoop(); });
+  }
+
+  private gameLoop(): void {
+    if (this.chip8.getError() || !this.isLoaded || this.stop) {
+      clearInterval(this.intervalID);
+      return;
+    }
+
+    this.chip8.emulateCycle();
+
+    for (let i = 0; i < 32; i++) {
+      for (let j = 0; j < 64; j++) {
+        const pixel = document.getElementById((j * 32 + i).toString());
+        if (pixel) {
+          if (this.chip8.getGraphics()[i][j] === 1) {
+            pixel.classList.add('filled');
+          }
+          else {
+            pixel.classList.remove('filled');
           }
         }
-        this.chip8.emulateCycle();
-
-        if (this.chip8.getError())
-          break;
       }
     }
-      
-    else
-      console.log('Memory not loaded yet');
+    
+    setTimeout(() => {
+      window.requestAnimationFrame(() => { this.gameLoop(); });
+    }, 1);
   }
 }
