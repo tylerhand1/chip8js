@@ -259,7 +259,7 @@ export class Chip8 {
         break;
       }
       case 0xC000: {
-        this.V[(this.opcode & 0x0F00) >> 8] = this.generateRandomNumber();
+        this.V[(this.opcode & 0x0F00) >> 8] = (this.generateRandomNumber()) & (this.opcode & 0x00FF);
         this.pc += 2;
         break;
       }
