@@ -116,12 +116,12 @@ export class Chip8 {
     switch (this.opcode & 0xF000) {
       case 0x0000: {
         switch (this.opcode & 0x00FF) {
-          case 0x00E0:
+          case 0x00E0: // 0x00E0: clears the screen
             this.graphics = Array.from(Array(64), () => Array(32).fill(0) as number[]);
             this.drawFlag = true;
             this.pc += 2;
             break;
-          case 0x00EE:
+          case 0x00EE: // 0x00EE: Returns from subroutine
             this.sp--;
             this.pc = this.stack[this.sp];
             this.pc += 2;
@@ -132,70 +132,70 @@ export class Chip8 {
         }
         break;
       }
-      case 0x1000: {
+      case 0x1000: { // 0x1NNN: Set the program counter to NNN
         this.pc = this.opcode & 0x0FFF;
         break;
       }
-      case 0x2000: {
+      case 0x2000: { // 0x2NNN: Call subroutine at address NNN
         this.stack[this.sp] = this.pc;
         this.sp++;
         this.pc = this.opcode & 0x0FFF;
         break;
       }
-      case 0x3000: {
+      case 0x3000: { // 0x3xkk: Skip next instruction if Vx = kk
         if (this.V[(this.opcode & 0x0F00) >> 8] === (this.opcode & 0x00FF))
           this.pc += 4;
         else
           this.pc += 2;
         break;
       }
-      case 0x4000: {
+      case 0x4000: { // 0x4xkk: Skip next instruction if Vx != kk
         if (this.V[(this.opcode & 0x0F00) >> 8] !== (this.opcode & 0x00FF))
           this.pc += 4;
         else
           this.pc += 2;
         break;
       }
-      case 0x5000: {
+      case 0x5000: { // 0x5xy0: Skip next instruction if Vx = Vy
         if (this.V[(this.opcode & 0x0F00) >> 8] === this.V[(this.opcode & 0x00F0) >> 4])
           this.pc += 4;
         else
           this.pc += 2;
         break;
       }
-      case 0x6000: {
+      case 0x6000: { // 0x6xkk: Set Vx = kk
         this.V[(this.opcode & 0x0F00) >> 8] = this.opcode & 0x00FF;
         this.pc += 2;
         break;
       }
-      case 0x7000: {
+      case 0x7000: { // 0x7xkk: Set Vx = Vx + kk
         this.V[(this.opcode & 0x0F00) >> 8] += this.opcode & 0x00FF;
         this.pc += 2;
         break;
       }
       case 0x8000: {
         switch (this.opcode & 0x000F) {
-          case 0x0000: {
+          case 0x0000: { // 0x8xy0: Set Vx = Vy
             this.V[(this.opcode & 0x0F00) >> 8] = this.V[(this.opcode & 0x00F0) >> 4];
             this.pc += 2;
             break;
           }
-          case 0x0001: {
+          case 0x0001: { // 0x8xy1: Set Vx = Vx OR Vy
             this.V[(this.opcode & 0x0F00) >> 8] |= this.V[(this.opcode & 0x00F0) >> 4];
             this.pc += 2;
             break;
           }
-          case 0x0002: {
+          case 0x0002: { // 0x8xy2: Set Vx = Vx AND Vy
             this.V[(this.opcode & 0x0F00) >> 8] &= this.V[(this.opcode & 0x00F0) >> 4];
             this.pc += 2;
             break;
           }
-          case 0x0003: {
+          case 0x0003: { // 0x8xy3: Set Vx = Vx XOR Vy
             this.V[(this.opcode & 0x0F00) >> 8] ^= this.V[(this.opcode & 0x00F0) >> 4];
             this.pc += 2;
             break;
           }
-          case 0x0004: {
+          case 0x0004: { // 0x8xy4: Set Vx = Vx + Vy, set VF to carry
             if ((this.V[(this.opcode & 0x00F0)] >> 4 ) > (0xFF - this.V[(this.opcode & 0x0F00) >> 8]))
               this.V[0xF] = 1;
             else
@@ -204,7 +204,7 @@ export class Chip8 {
             this.pc += 2;
             break;
           }
-          case 0x0005: {
+          case 0x0005: { // 0x8xy5: Set Vx = Vx - Vy, set VF to NOT borrow
             if (this.V[(this.opcode & 0x00F0) >> 4] >= this.V[(this.opcode & 0x0F00) >> 8])
               this.V[0xF] = 1;
             else
@@ -213,14 +213,14 @@ export class Chip8 {
             this.pc += 2;
             break;
           }
-          case 0x0006: {
+          case 0x0006: { // 0x8xy6: Set Vx = Vx SHR 1
             const leastSigBit = this.V[(this.opcode & 0x0F00) >> 8] & 0b00000001;
             this.V[0xF] = leastSigBit;
             this.V[(this.opcode & 0x0F00) >> 8] >>= 1;
             this.pc += 2;
             break;
           }
-          case 0x0007: {
+          case 0x0007: { // 0x8xy7: Set Vx = Vy - Vx, set VF to NOT borrow.
             if (this.V[(this.opcode & 0x00F0) >> 4] > this.V[(this.opcode & 0x0F00) >> 8])
               this.V[0xF] = 1;
             else
@@ -229,7 +229,7 @@ export class Chip8 {
             this.pc += 2;
             break;
           }
-          case 0x000E: {
+          case 0x000E: { // 0x8xyE: Set Vx = Vx SHL 1
             const mostSigBit = (this.V[(this.opcode & 0x0F00) >> 8] & 0b10000000) >> 7;
             this.V[0xF] = mostSigBit;
             this.V[(this.opcode & 0x0F00) >> 8] <<= 1;
@@ -242,28 +242,28 @@ export class Chip8 {
         }
         break;
       }
-      case 0x9000: {
+      case 0x9000: { // 0x9xy0: Skip next instruction if Vx != Vy
         if (this.V[(this.opcode & 0x0F00) >> 8] !== this.V[(this.opcode & 0x00F0) >> 4])
           this.pc += 4;
         else
           this.pc += 2;
         break;
       }
-      case 0xA000: {
+      case 0xA000: { // 0xANNN: Sets I to the address NNN
         this.I = this.opcode & 0x0FFF;
         this.pc += 2;
         break;
       }
-      case 0xB000: {
+      case 0xB000: { // 0xBNNN: Jump to location NNN + V0
         this.pc = this.opcode & 0x0FFF + this.V[0];
         break;
       }
-      case 0xC000: {
+      case 0xC000: { // 0xCxkk: Set Vx = random byte AND kk.
         this.V[(this.opcode & 0x0F00) >> 8] = (this.generateRandomNumber()) & (this.opcode & 0x00FF);
         this.pc += 2;
         break;
       }
-      case 0xD000: {
+      case 0xD000: { // 0xDxyn: Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision
         const x: number = this.V[(this.opcode & 0x0F00) >> 8] >> 8;
         const y: number = this.V[(this.opcode & 0x00F0) >> 4] >> 8;
         const height = this.opcode & 0x000F;
@@ -288,14 +288,14 @@ export class Chip8 {
       case 0xE000: {
         switch (this.opcode & 0x00FF)
         {
-          case 0x009E: {
+          case 0x009E: { // 0xEx9E: Skip next instruction if key with the value of Vx is pressed
             if (this.key === this.V[(this.opcode & 0x0F00) >> 8])
               this.pc += 4;
             else
               this.pc += 2;
             break;
           }
-          case 0x00A1: {
+          case 0x00A1: { // 0xExA1: Skip next instruction if key with the value of Vx is not pressed
             if (this.key !== this.V[(this.opcode & 0x0F00) >> 8])
               this.pc += 4;
             else
@@ -311,52 +311,52 @@ export class Chip8 {
       case 0xF000: {
         switch (this.opcode & 0x00FF)
         {
-          case 0x0007: {
+          case 0x0007: { // 0xFx07: Set Vx = delay timer value
             if (this.delayTimer)
               this.V[(this.opcode & 0x0F00) >> 8] = this.delayTimer;
             this.pc += 2;
             break;
           }
-          case 0x000A: {
+          case 0x000A: { // 0xFx0A: Wait for a key press, store the value of the key in Vx
             if (this.key === this.V[(this.opcode & 0x0F00) >> 8])
               this.pc += 2;
             break;
           }
-          case 0x0015: {
+          case 0x0015: { // 0xFx15: Set delay timer = Vx
             this.delayTimer = this.V[(this.opcode & 0x0F00) >> 8];
             this.pc += 2;
             break;
           }
-          case 0x0018: {
+          case 0x0018: { // 0xFx18: Set sound timer = Vx
             this.soundTimer = this.V[(this.opcode & 0x0F00) >> 8];
             this.pc += 2;
             break;
           }
-          case 0x001E: {
+          case 0x001E: { // 0xFx1E: Set I = I + Vx
             this.I += this.V[(this.opcode & 0x0F00) >> 8];
             this.pc += 2;
             break;
           }
-          case 0x0029: {
+          case 0x0029: { // 0xFx29: Set I = location of sprite for digit Vx
             this.I = this.V[(this.opcode & 0x0F00) >> 8];
             this.pc += 2;
             break;
           }
-          case 0x0033: {
+          case 0x0033: { // 0xFx33: Store BCD representation of Vx in memory locations I, I+1, and I+2
             this.memory[this.I] = this.V[(this.opcode & 0x0F00) >> 8] / 100;
             this.memory[this.I + 1] = (this.V[(this.opcode & 0x0F00) >> 8] / 10) % 10;
             this.memory[this.I + 2] = (this.V[(this.opcode & 0x0F00) >> 8] % 100) % 10;
             this.pc += 2;
             break;
           }
-          case 0x0055: {
+          case 0x0055: { // 0xFx55: Store registers V0 through Vx in memory starting at location I
             for (let i = 0; i < (this.opcode & 0x0F00) >> 8; i++) {
               this.memory[i + this.I] = this.V[i];
             }
             this.pc += 2;
             break;
           }
-          case 0x0065: {
+          case 0x0065: { // 0xFx65: Read registers V0 through Vx from memory starting at location I
             for (let i = 0; i < (this.opcode & 0x0F00) >> 8; i++) {
               this.V[i] = this.memory[i + this.I];
             }
