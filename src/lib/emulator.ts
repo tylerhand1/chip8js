@@ -71,7 +71,7 @@ export class Emulator {
 
     for (let i = 0; i < 32; i++) {
       for (let j = 0; j < 64; j++) {
-        const pixel = document.getElementById((j * 32 + i).toString());
+        const pixel = document.getElementById((i * 64 + j).toString());
         if (pixel) {
           if (this.chip8.getGraphics()[i][j] === 1) {
             pixel.classList.add('filled');

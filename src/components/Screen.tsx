@@ -4,15 +4,15 @@ const Pixel = ( { row, col } : IPixelProps) => {
   return (
     <div 
       className='pixel'
-      id={(row * 32 + col).toString()}
-      key={row * 32 + col}
+      id={(row * 64 + col).toString()}
+      key={row * 64 + col}
     />
   );
 };
 
 const PixelRow = ({ rowId } : IPixelRowProps) => {
   const row = [];
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < 64; i++) {
     row.push(<Pixel row={rowId} col={i} />);
   }
   return row;
@@ -20,7 +20,7 @@ const PixelRow = ({ rowId } : IPixelRowProps) => {
 
 const Screen = () => {
   const screen = [];
-  for (let i = 0; i < 64; i++) {
+  for (let i = 0; i < 32; i++) {
     screen.push(
       <div className='pixel-row'>
         <PixelRow rowId={i} />
