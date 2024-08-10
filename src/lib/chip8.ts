@@ -289,7 +289,7 @@ export class Chip8 {
           pixel = this.memory[this.I + yLine];
           for (let xLine = 0; xLine < 8; xLine++) {
             if ((pixel & (0x80 >> xLine)) !== 0) {
-              if (this.graphics[xLine + x][yLine + y]) {
+              if (this.graphics[xLine + x][yLine + y] === 1) {
                 this.V[0xF] = 1;
               }
               this.graphics[xLine + x][yLine + y] ^= 1;
