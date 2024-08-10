@@ -164,7 +164,7 @@ export class Chip8 {
         break;
       }
       case 0x6000: {
-        this.V[(this.opcode & 0x0F00) >> 8] = this.opcode & 0x0FFF;
+        this.V[(this.opcode & 0x0F00) >> 8] = this.opcode & 0x00FF;
         this.pc += 2;
         break;
       }
@@ -391,7 +391,6 @@ export class Chip8 {
    */
   public emulateCycle(): void {
     this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
-
     this.handleOpcode();
 
     this.handleTimers();
