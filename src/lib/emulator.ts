@@ -83,8 +83,6 @@ export class Emulator {
       }
     }
     
-    setTimeout(() => {
-      window.requestAnimationFrame(() => { this.gameLoop(); });
-    }, 1);
+    window.requestAnimationFrame(() => { this.gameLoop(); });
   }
 }
