@@ -71,9 +71,9 @@ export class Emulator {
 
     for (let i = 0; i < 32; i++) {
       for (let j = 0; j < 64; j++) {
-        const pixel = document.getElementById((j * 32 + i).toString());
+        const pixel = document.getElementById((i * 64 + j).toString());
         if (pixel) {
-          if (this.chip8.getGraphics()[i][j] === 1) {
+          if (this.chip8.getGraphics()[j][i] === 1) {
             pixel.classList.add('filled');
           }
           else {
@@ -83,8 +83,6 @@ export class Emulator {
       }
     }
     
-    setTimeout(() => {
-      window.requestAnimationFrame(() => { this.gameLoop(); });
-    }, 1);
+    window.requestAnimationFrame(() => { this.gameLoop(); });
   }
 }
