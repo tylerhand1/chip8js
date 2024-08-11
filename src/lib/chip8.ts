@@ -170,6 +170,8 @@ export class Chip8 {
       }
       case 0x7000: { // 0x7xkk: Set Vx = Vx + kk
         this.V[(this.opcode & 0x0F00) >> 8] += this.opcode & 0x00FF;
+        if (this.V[(this.opcode & 0x0F00) >> 8] > 255)
+          this.V[(this.opcode & 0x0F00) >> 8] -= 256;
         this.pc += 2;
         break;
       }
