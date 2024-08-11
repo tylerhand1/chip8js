@@ -198,26 +198,21 @@ export class Chip8 {
             break;
           }
           case 0x0004: { // 0x8xy4: Set Vx = Vx + Vy, set VF to carry
-            if ((this.V[(this.opcode & 0x00F0)] >> 4 ) > (0xFF - this.V[(this.opcode & 0x0F00) >> 8]))
-              this.V[0xF] = 1;
-            else
-              this.V[0xF] = 0;
-            this.V[(this.opcode & 0x0F00) >> 8] += this.V[(this.opcode & 0x00F0) >> 4]; 
+            this.V[0xF] = this.V[(this.opcode & 0x0F00) >> 8] + this.V[(this.opcode & 0x00F0) >> 4] > 0xFF ? 1 : 0;
+            this.V[(this.opcode & 0x0F00) >> 8] += this.V[(this.opcode & 0x00F0) >> 4];
+            if (this.V[(this.opcode & 0x0F00) >> 8] > 0xFF) // subtract 256 if carried over
+              this.V[(this.opcode & 0x0F00) >> 8] -= 0x100;
             this.pc += 2;
             break;
           }
           case 0x0005: { // 0x8xy5: Set Vx = Vx - Vy, set VF to NOT borrow
-            if (this.V[(this.opcode & 0x00F0) >> 4] >= this.V[(this.opcode & 0x0F00) >> 8])
-              this.V[0xF] = 1;
-            else
-              this.V[0xF] = 0;
+            this.V[0xF] = this.V[(this.opcode & 0x0F00) >> 8] > this.V[(this.opcode & 0x00F0) >> 4] ? 1 : 0;
             this.V[(this.opcode & 0x0F00) >> 8] -= this.V[(this.opcode & 0x00F0) >> 4];
             this.pc += 2;
             break;
           }
           case 0x0006: { // 0x8xy6: Set Vx = Vx SHR 1
-            const leastSigBit = this.V[(this.opcode & 0x0F00) >> 8] & 0b00000001;
-            this.V[0xF] = leastSigBit;
+            this.V[0xF] = this.V[(this.opcode & 0x0F00) >> 8] & 1;
             this.V[(this.opcode & 0x0F00) >> 8] >>= 1;
             this.pc += 2;
             break;
@@ -232,7 +227,7 @@ export class Chip8 {
             break;
           }
           case 0x000E: { // 0x8xyE: Set Vx = Vx SHL 1
-            const mostSigBit = (this.V[(this.opcode & 0x0F00) >> 8] & 0b10000000) >> 7;
+            const mostSigBit = this.V[(this.opcode & 0x0F00) >> 8] >> 7;
             this.V[0xF] = mostSigBit;
             this.V[(this.opcode & 0x0F00) >> 8] <<= 1;
             this.pc += 2;
@@ -270,6 +265,8 @@ export class Chip8 {
         const y: number = this.V[(this.opcode & 0x00F0) >> 4];
         const height = this.opcode & 0x000F;
         let pixel: number;
+
+        this.V[0xF] = 0;
 
         for (let yLine = 0; yLine < height; yLine++) {
           pixel = this.memory[this.I + yLine];
@@ -345,21 +342,21 @@ export class Chip8 {
             break;
           }
           case 0x0033: { // 0xFx33: Store BCD representation of Vx in memory locations I, I+1, and I+2
-            this.memory[this.I] = this.V[(this.opcode & 0x0F00) >> 8] / 100;
-            this.memory[this.I + 1] = (this.V[(this.opcode & 0x0F00) >> 8] / 10) % 10;
-            this.memory[this.I + 2] = (this.V[(this.opcode & 0x0F00) >> 8] % 100) % 10;
+            this.memory[this.I] = Math.floor(this.V[(this.opcode & 0x0F00) >> 8] / 100);
+            this.memory[this.I + 1] = Math.floor((this.V[(this.opcode & 0x0F00) >> 8] / 10) % 10);
+            this.memory[this.I + 2] = Math.floor((this.V[(this.opcode & 0x0F00) >> 8] % 100) % 10);
             this.pc += 2;
             break;
           }
           case 0x0055: { // 0xFx55: Store registers V0 through Vx in memory starting at location I
-            for (let i = 0; i < (this.opcode & 0x0F00) >> 8; i++) {
+            for (let i = 0; i <= (this.opcode & 0x0F00) >> 8; i++) {
               this.memory[i + this.I] = this.V[i];
             }
             this.pc += 2;
             break;
           }
           case 0x0065: { // 0xFx65: Read registers V0 through Vx from memory starting at location I
-            for (let i = 0; i < (this.opcode & 0x0F00) >> 8; i++) {
+            for (let i = 0; i <= (this.opcode & 0x0F00) >> 8; i++) {
               this.V[i] = this.memory[i + this.I];
             }
             this.pc += 2;
@@ -394,7 +391,6 @@ export class Chip8 {
   public emulateCycle(): void {
     this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
     this.handleOpcode();
-
     this.handleTimers();
   }
 }
