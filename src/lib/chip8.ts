@@ -208,6 +208,8 @@ export class Chip8 {
           case 0x0005: { // 0x8xy5: Set Vx = Vx - Vy, set VF to NOT borrow
             this.V[0xF] = this.V[(this.opcode & 0x0F00) >> 8] > this.V[(this.opcode & 0x00F0) >> 4] ? 1 : 0;
             this.V[(this.opcode & 0x0F00) >> 8] -= this.V[(this.opcode & 0x00F0) >> 4];
+            if (this.V[(this.opcode & 0x0F00) >> 8] < 0) // add 256 if borrow
+              this.V[(this.opcode & 0x0F00) >> 8] += 0x100;
             this.pc += 2;
             break;
           }
@@ -217,12 +219,11 @@ export class Chip8 {
             this.pc += 2;
             break;
           }
-          case 0x0007: { // 0x8xy7: Set Vx = Vy - Vx, set VF to NOT borrow.
-            if (this.V[(this.opcode & 0x00F0) >> 4] > this.V[(this.opcode & 0x0F00) >> 8])
-              this.V[0xF] = 1;
-            else
-              this.V[0xF] = 0;
-            this.V[(this.opcode & 0x00F0) >> 4] -= this.V[(this.opcode & 0x0F00) >> 8];
+          case 0x0007: { // 0x8xy7: Set Vx = Vy - Vx, set VF to NOT borrow
+            this.V[0xF] = this.V[(this.opcode & 0x00F0) >> 4] > this.V[(this.opcode & 0x0F00) >> 8] ? 1 : 0;
+            this.V[(this.opcode & 0x0F00) >> 8] = this.V[(this.opcode & 0x00F0) >> 4] - this.V[(this.opcode & 0x0F00) >> 8];
+            if (this.V[(this.opcode & 0x0F00) >> 8] < 0) // add 256 if borrow
+              this.V[(this.opcode & 0x0F00) >> 8] += 0x100;
             this.pc += 2;
             break;
           }
@@ -230,6 +231,8 @@ export class Chip8 {
             const mostSigBit = this.V[(this.opcode & 0x0F00) >> 8] >> 7;
             this.V[0xF] = mostSigBit;
             this.V[(this.opcode & 0x0F00) >> 8] <<= 1;
+            if (this.V[(this.opcode & 0x0F00) >> 8] > 0xFF) // subtract 256 if carried over
+              this.V[(this.opcode & 0x0F00) >> 8] -= 0x100;
             this.pc += 2;
             break;
           }
