@@ -127,7 +127,7 @@ export class Chip8 {
             this.pc += 2;
             break;
           default:
-            console.error('Unrecognized opcode');
+            console.error('Unrecognized opcode', this.opcode.toString(16).padStart(4, '0'));
             this.error = true;
         }
         break;
@@ -237,7 +237,7 @@ export class Chip8 {
             break;
           }
           default:
-            console.error('Unrecognized opcode');
+            console.error('Unrecognized opcode', this.opcode.toString(16).padStart(4, '0'));
             this.error = true;
         }
         break;
@@ -264,8 +264,8 @@ export class Chip8 {
         break;
       }
       case 0xD000: { // 0xDxyn: Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision
-        const x: number = this.V[(this.opcode & 0x0F00) >> 8] >> 8;
-        const y: number = this.V[(this.opcode & 0x00F0) >> 4] >> 8;
+        const x: number = this.V[(this.opcode & 0x0F00) >> 8];
+        const y: number = this.V[(this.opcode & 0x00F0) >> 4];
         const height = this.opcode & 0x000F;
         let pixel: number;
 
@@ -273,10 +273,10 @@ export class Chip8 {
           pixel = this.memory[this.I + yLine];
           for (let xLine = 0; xLine < 8; xLine++) {
             if ((pixel & (0x80 >> xLine)) !== 0) {
-              if (this.graphics[yLine + y][xLine + x] === 1) {
+              if (this.graphics[xLine + x][yLine + y] === 1) {
                 this.V[0xF] = 1;
               }
-              this.graphics[yLine + y][xLine + x] ^= 1;
+              this.graphics[xLine + x][yLine + y] ^= 1;
             }
           }
         }
@@ -303,7 +303,7 @@ export class Chip8 {
             break;
           }
           default:
-            console.error('Unrecognized opcode');
+            console.error('Unrecognized opcode', this.opcode.toString(16).padStart(4, '0'));
             this.error = true;
         }
         break;
@@ -364,13 +364,13 @@ export class Chip8 {
             break;
           }
           default:
-            console.error('Unrecognized opcode');
+            console.error('Unrecognized opcode', this.opcode.toString(16).padStart(4, '0'));
             this.error = true;
         }
         break;
       }
       default:
-        console.error('Unrecognized opcode');
+        console.error('Unrecognized opcode', this.opcode.toString(16).padStart(4, '0'));
         this.error = true;
     }
   }
