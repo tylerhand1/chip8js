@@ -3,6 +3,17 @@
   padding: 0;
 
   box-sizing: border-box;
+  list-style: none;
+}
+
+:root {
+  --screen-width: 300px;
+  --screen-height: 150px;
+
+  --green: #4fe44f;
+  --blue: #4fa8e4;
+
+  --white: #d0e0e0;
 }
 
 html,
@@ -11,14 +22,78 @@ body,
   min-height: 100vh;
 }
 
+body {
+  font-size: 62.5%;
+
+  background-color: #161616;
+  color: var(--green);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 120px;
+}
+
+body,
+input,
+input::file-selector-button,
+button {
+  font-family: "Press Start 2P", system-ui;
+}
+
+header {
+  justify-self: flex-start;
+  border-bottom: 2px solid var(--green);
+  font-size: 2.2rem;
+  width: 100%;
+}
+
+header ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+}
+
+header ul a {
+  color: var(--green);
+  text-decoration: none;
+}
+
+header ul a:hover {
+  color: var(--blue);
+}
+
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: var(--screen-width);
+  gap: 12px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+p {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.4rem;
+}
+
+a {
+  color: var(--white);
 }
 
 .screen-container {
-  outline: 1px solid black;
+  outline: 1px solid var(--green);
 }
 
 .pixel-row {
@@ -26,10 +101,91 @@ main {
 }
 
 .pixel {
-  width: 13px;
-  height: 13px;
+  width: calc(var(--screen-width) / 64);
+  height: calc(var(--screen-height) / 32);
+  
+  outline: 1px solid #202020;
 }
 
 .filled {
-  background-color: black;
+  background-color: #4fe44f;
+}
+
+label {
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+button,
+input[type='button'] {
+  font-size: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#game-file {
+  display: none;
+}
+
+.about-container {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media only screen and (min-width: 700px) {
+  :root {
+    --screen-width: 600px;
+    --screen-height: 300px;
+  }
+
+  header {
+    font-size: 2.6rem;
+    padding: 12px 0;
+  }
+
+  header ul {
+    gap: 128px;
+  }
+
+  main {
+    gap: 24px;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  :root {
+    --screen-width: 900px;
+    --screen-height: 450px;
+  }
+
+  #root {
+    gap: 80px;
+  }
+
+  header {
+    font-size: 3.2rem;
+  }
+
+  header ul {
+    justify-content: space-evenly;
+    gap: 0;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+  }
+
+  p {
+    font-size: 1.8rem;
+  }
+
+  main {
+    gap: 36px;
+  }
 }
