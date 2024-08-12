@@ -4,13 +4,14 @@ import PlayButton from './PlayButton';
 
 const GamePlayer = () => {
   return (
-    <>
+    <main>
+      <h1>Chip-8 Emulator</h1>
       <div className='screen-container'>
         <Screen />
       </div>
       <GameUploadForm />
       <PlayButton />
-    </>
+    </main>
   );
 };
 

@@ -1,23 +1,24 @@
+import {
+  BrowserRouter as Router,
+  Routes, Route
+} from 'react-router-dom';
 import '@/styles/index.css';
+import Header from '@/components/Header';
 import GamePlayer from '@/components/GamePlayer';
+import About from '@/pages/About';
 
 const App = () => {
   
   return (
     <>
-      <header>
-        <ul>
-          <li>
-            Game
-          </li>
-          <li>
-            About
-          </li>
-        </ul>
-      </header>
-      <main>
-        <GamePlayer />
-      </main>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path='/' element={<GamePlayer />} />
+          <Route path='/about' element={<About />} />
+          <Route path='*' element={<GamePlayer />} />
+        </Routes>
+      </Router>
     </>
   );
 };
