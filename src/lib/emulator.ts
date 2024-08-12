@@ -13,6 +13,10 @@ export class Emulator {
     this.stop = true;
 
     this.isLoaded = false;
+
+    addEventListener('keydown', (e: KeyboardEvent) => {
+      this.setKey(e);
+    });
   }
 
   /**

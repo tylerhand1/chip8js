@@ -1,10 +1,10 @@
-import React from 'react';
-import { Emulator } from '@/lib/emulator';
+import React, { useContext } from 'react';
 import Screen from '@/components/Screen';
+import { EmulatorContext } from './context/emulatorContext';
 import '@/styles/index.css';
 
 const App = () => {
-  const emulator = new Emulator();
+  const emulator = useContext(EmulatorContext);
 
   const handleUpload = (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.currentTarget.files) {
@@ -19,10 +19,6 @@ const App = () => {
     emulator.setStop(false);
     emulator.play();
   };
-
-  addEventListener('keydown', (e: KeyboardEvent) => {
-    emulator.setKey(e);
-  });
   
   return (
     <>
