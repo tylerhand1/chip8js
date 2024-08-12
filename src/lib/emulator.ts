@@ -120,7 +120,7 @@ export class Emulator {
         break;
       }
       default:
-        key = -1;
+        key = this.chip8.getKey();
     };
     this.chip8.setKey(key);
   }
