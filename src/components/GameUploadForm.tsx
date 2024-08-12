@@ -1,10 +1,8 @@
-import { EmulatorContext } from '@/context/emulatorContext';
 import { useContext } from 'react';
-import Screen from '@/components/Screen';
+import { EmulatorContext } from '@/context/emulatorContext';
 
-const Game = () => {
+const GameUploadForm = () => {
   const emulator = useContext(EmulatorContext);
-
   const handleUpload = (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.currentTarget.files) {
       emulator.reset();
@@ -12,12 +10,6 @@ const Game = () => {
       emulator.readGame(gameFile);
     }
   };
-
-  const handlePlay = () => {
-    if (emulator.getStop())
-      emulator.play();
-  };
-
   return (
     <>
       <label htmlFor="game-file">Select a ROM file</label>
@@ -28,13 +20,8 @@ const Game = () => {
         accept='.rom,.chip8,.c8,.ch8'
         onChange={handleUpload}
       />
-      <button onClick={handlePlay}>Play</button>
-      <div className='screen-container'>
-        <Screen />
-      </div>
     </>
-    
   );
 };
 
-export default Game;
+export default GameUploadForm;

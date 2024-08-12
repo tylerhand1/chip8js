@@ -1,12 +1,12 @@
 import '@/styles/index.css';
-import Game from '@/components/Game';
+import GamePlayer from '@/components/GamePlayer';
 
 const App = () => {
   
   return (
     <>
       <main>
-        <Game />
+        <GamePlayer />
       </main>
     </>
   );
