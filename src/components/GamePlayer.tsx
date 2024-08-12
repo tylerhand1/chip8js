@@ -12,8 +12,6 @@ const GamePlayer = () => {
       <div className='info-btns-container'>
         <div className='key-info-container'>
           <h2>Keys</h2>
-          <p>Chip-8 accepts keys from 0 to 9 and A to F</p>
-          <p>To make this more convenient, they are mapped to be</p>
           <p>1 2 3 4</p>
           <p>q w e r</p>
           <p>a s d f</p>

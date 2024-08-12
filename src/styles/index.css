@@ -14,6 +14,8 @@
   --blue: #4fa8e4;
 
   --white: #d0e0e0;
+
+  --gap: 50px;
 }
 
 html,
@@ -33,7 +35,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: var(--gap);
 }
 
 body,
@@ -71,7 +73,7 @@ main {
   flex-direction: column;
   align-items: center;
   width: var(--screen-width);
-  gap: 12px;
+  gap: var(--gap);
   text-align: center;
 }
 
@@ -111,6 +113,18 @@ a {
   background-color: #4fe44f;
 }
 
+.info-btns-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.key-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .btns-container {
   display: flex;
   flex-direction: column;
@@ -146,6 +160,12 @@ input[type='button'] {
   :root {
     --screen-width: 600px;
     --screen-height: 300px;
+
+    --gap: 50px;
+  }
+
+  #root {
+    gap: var(--gap);
   }
 
   header {
@@ -158,7 +178,18 @@ input[type='button'] {
   }
 
   main {
-    gap: 24px;
+    gap: var(--gap);
+  }
+
+  .key-info-container {
+    gap: 6px;
+  }
+
+  .info-btns-container {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
   }
 }
 
@@ -166,10 +197,12 @@ input[type='button'] {
   :root {
     --screen-width: 900px;
     --screen-height: 450px;
+
+    --gap: 40px;
   }
 
   #root {
-    gap: 20px;
+    gap: var(--gap);
   }
 
   header {
@@ -194,12 +227,7 @@ input[type='button'] {
   }
 
   main {
-    gap: 24px;
-  }
-
-  .info-btns-container {
-    display: flex;
-    align-items: center;
+    gap: var(--gap);
   }
 
   .info-btns-container p {
