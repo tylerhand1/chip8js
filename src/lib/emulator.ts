@@ -50,6 +50,82 @@ export class Emulator {
   }
 
   /**
+   * setKey
+   */
+  public setKey(e: KeyboardEvent): void {
+    let key: number;
+    switch (e.key) {
+      case '1': {
+        key = 0x0;
+        break;
+      }
+      case '2': {
+        key = 0x1;
+        break;
+      }
+      case '3': {
+        key = 0x2;
+        break;
+      }
+      case '4': {
+        key = 0x3;
+        break;
+      }
+      case 'q': {
+        key = 0x4;
+        break;
+      }
+      case 'w': {
+        key = 0x5;
+        break;
+      }
+      case 'e': {
+        key = 0x6;
+        break;
+      }
+      case 'r': {
+        key = 0x7;
+        break;
+      }
+      case 'a': {
+        key = 0x8;
+        break;
+      }
+      case 's': {
+        key = 0x9;
+        break;
+      }
+      case 'd': {
+        key = 0xA;
+        break;
+      }
+      case 'f': {
+        key = 0xB;
+        break;
+      }
+      case 'z': {
+        key = 0xC;
+        break;
+      }
+      case 'x': {
+        key = 0xD;
+        break;
+      }
+      case 'c': {
+        key = 0xE;
+        break;
+      }
+      case 'v': {
+        key = 0xF;
+        break;
+      }
+      default:
+        key = -1;
+    };
+    this.chip8.setKey(key);
+  }
+
+  /**
    * play
    */
   public play(): void {

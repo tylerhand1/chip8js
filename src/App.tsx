@@ -19,6 +19,10 @@ const App = () => {
     emulator.setStop(false);
     emulator.play();
   };
+
+  addEventListener('keydown', (e: KeyboardEvent) => {
+    emulator.setKey(e);
+  });
   
   return (
     <>
