@@ -1,6 +1,6 @@
 export class Chip8 {
   private graphics: number[][];
-  private key: number | undefined;
+  private key: number;
   private pc: number;
   private opcode: number;
   private memory: number[];
@@ -15,7 +15,7 @@ export class Chip8 {
 
   constructor() {
     this.graphics = [];
-    
+    this.key = -1;
     this.pc = 0x200;
     this.opcode = 0;
     this.memory = [];
@@ -47,7 +47,7 @@ export class Chip8 {
   /**
    * getKey
    */
-  public getKey(): number | undefined {
+  public getKey(): number {
     return this.key;
   }
 
@@ -70,25 +70,17 @@ export class Chip8 {
    */
   public initialize(): void {
     this.graphics = Array.from(Array(64), () => Array(32).fill(0) as number[]);
-    
+    this.key = -1;
     this.pc = 0x200;
     this.opcode = 0;
-    this.memory = [];
-    this.V = [];
     this.I = 0;
-    this.stack = [];
     this.sp = 0;
     this.drawFlag = false;
     this.error = false;
 
-    for (let i = 0; i < 16; i++) {
-      this.V[i] = 0;
-      this.stack[i] = 0;
-    }
-
-    for (let i = 0; i < 4096; i++) {
-      this.memory[i] = 0;
-    }
+    this.V = Array(16).fill(0) as number[];
+    this.stack = Array(16).fill(0) as number[];
+    this.memory = Array(4096).fill(0) as number[];
   }
 
   /**
