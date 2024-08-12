@@ -5,6 +5,16 @@ const App = () => {
   
   return (
     <>
+      <header>
+        <ul>
+          <li>
+            Game
+          </li>
+          <li>
+            About
+          </li>
+        </ul>
+      </header>
       <main>
         <GamePlayer />
       </main>
