@@ -47,10 +47,18 @@ export class Emulator {
   }
 
   /**
+   * getStop
+   */
+  public getStop(): boolean {
+    return this.stop;
+  }
+
+  /**
    * reset
    */
   public reset(): void {
     this.chip8.initialize();
+    this.setStop(true);
   }
 
   /**
@@ -137,6 +145,8 @@ export class Emulator {
       console.log('Memory not loaded yet');
       return;
     }
+
+    this.setStop(false);
 
     window.requestAnimationFrame(() => { this.gameLoop(); });
   }

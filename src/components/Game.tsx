@@ -8,16 +8,16 @@ const Game = () => {
   const handleUpload = (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.currentTarget.files) {
       emulator.reset();
-      emulator.setStop(true);
       const gameFile = e.currentTarget.files[0];
       emulator.readGame(gameFile);
     }
   };
 
   const handlePlay = () => {
-    emulator.setStop(false);
-    emulator.play();
+    if (emulator.getStop())
+      emulator.play();
   };
+
   return (
     <>
       <label htmlFor="game-file">Select a ROM file</label>
