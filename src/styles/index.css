@@ -33,7 +33,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 120px;
+  gap: 50px;
 }
 
 body,
@@ -111,6 +111,14 @@ a {
   background-color: #4fe44f;
 }
 
+.btns-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
 label {
   text-align: center;
   font-size: 1.4rem;
@@ -161,7 +169,7 @@ input[type='button'] {
   }
 
   #root {
-    gap: 80px;
+    gap: 20px;
   }
 
   header {
@@ -186,6 +194,15 @@ input[type='button'] {
   }
 
   main {
-    gap: 36px;
+    gap: 24px;
+  }
+
+  .info-btns-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .info-btns-container p {
+    font-size: 1.4rem;
   }
 }
