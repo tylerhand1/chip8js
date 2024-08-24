@@ -148,7 +148,7 @@ export class Emulator {
 
     this.setStop(false);
 
-    window.requestAnimationFrame(() => { this.gameLoop(); });
+    window.requestAnimationFrame( () => { this.gameLoop(); });
   }
 
   private gameLoop(): void {
@@ -173,6 +173,6 @@ export class Emulator {
       }
     }
     
-    window.requestAnimationFrame(() => { this.gameLoop(); });
+    window.requestAnimationFrame( () => { this.gameLoop(); });
   }
 }
