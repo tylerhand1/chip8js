@@ -13,6 +13,8 @@ export class Chip8 {
   private soundTimer: number | undefined;
   private error: boolean;
 
+  private fontset: number[];
+
   constructor() {
     this.graphics = [];
     this.key = -1;
@@ -26,6 +28,25 @@ export class Chip8 {
     this.drawFlag = false;
 
     this.error = false;
+
+    this.fontset = [
+      0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+      0x20, 0x60, 0x20, 0x20, 0x70, // 1
+      0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+      0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+      0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+      0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+      0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+      0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+      0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+      0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+      0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+      0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+      0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+      0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+      0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+      0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+    ];
 
     this.initialize();
   }
@@ -81,6 +102,10 @@ export class Chip8 {
     this.V = Array(16).fill(0) as number[];
     this.stack = Array(16).fill(0) as number[];
     this.memory = Array(4096).fill(0) as number[];
+
+    for (let i = 0; i < 80; i++) {
+      this.memory[i] = this.fontset[i];
+    }
   }
 
   /**
@@ -373,11 +398,9 @@ export class Chip8 {
     if (this.delayTimer && this.delayTimer > 0)
       this.delayTimer--;
 
-    if (this.soundTimer && this.soundTimer > 0) {
+    if (this.soundTimer && this.soundTimer > 0)
       if (this.soundTimer === 1)
-        console.log('Play sound');
-      this.soundTimer--;
-    }
+        console.log('BEEP!');
   }
 
   /**
